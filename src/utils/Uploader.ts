@@ -8,6 +8,14 @@ import { configs } from '../configs';
 
 export interface IUploader {
     uploader: Instance;
+
+    /**
+     * Returns an absolute url and full path to the resource, to allow it be served in an API manner.
+     * e.g. https://domain.url/uploads/gygyujx73y/documents/hy47hinxnuneq.pdf
+     *
+     * @param {string} filename
+     * @returns {string}
+     */
     extractFilepath: (filename: string) => string;
 }
 
@@ -35,7 +43,14 @@ const createRandomFileName = (file: File) => {
     return name + '.' + ext;
 };
 
-export const extractFilepath = (filename: string) => {
+/**
+ * Returns an absolute url and full path to the resource, to allow it be served in an API manner.
+ * e.g. https://domain.url/uploads/gygyujx73y/documents/hy47hinxnuneq.pdf
+ *
+ * @param {string} filename
+ * @returns {string}
+ */
+export const extractFilepath = (filename: string): string => {
     if (!filename) {
         return null;
     }
