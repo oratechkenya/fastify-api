@@ -1,0 +1,75 @@
+{
+    "name": "fastify-typescript",
+    "version": "0.0.1",
+    "description": "Template to quick start your API development using Fastify and TypeScript",
+    "main": "dist/index.js",
+    "scripts": {
+        "dev": "ts-node-dev --respawn --no-notify src/index.ts",
+        "start": "npm run clean && npm run build && node dist/index.js",
+        "build": "npm run clean && tsc -b",
+        "clean": "tsc -b --clean",
+        "debug": "node --inspect -r ts-node/register src/index.ts",
+        "docker-build": "npm run docker-stop && docker-compose build && docker rmi -f $(docker images --quiet --filter 'dangling=true')",
+        "docker-start": "docker-compose up",
+        "docker-stop": "docker-compose down",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "npm run lint -- --fix"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com:dannysofftie/fastify-typescript.git"
+    },
+    "keywords": [
+        "fastify",
+        "fastify-template",
+        "nodejs-api-development"
+    ],
+    "author": "Danny Sofftie",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/dannysofftie/fastify-typescript/issues"
+    },
+    "homepage": "https://github.com/dannysofftie/fastify-typescript#readme",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "bcrypt": "^3.0.6",
+        "dotenv": "^8.0.0",
+        "ejs": "^2.6.2",
+        "fastify": "^2.6.0",
+        "fastify-cookie": "^3.0.2",
+        "fastify-cors": "^2.1.3",
+        "fastify-favicon": "^2.0.0",
+        "fastify-multer-op": "^1.4.6",
+        "fastify-plugin": "^1.6.0",
+        "fastify-static": "^2.5.0",
+        "fastify-swagger": "^2.4.0",
+        "html-minifier": "^4.0.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.6.4",
+        "node-xlsx": "^0.15.0",
+        "nodemailer": "^6.3.0",
+        "pino-pretty": "^3.2.0",
+        "point-of-view": "^3.5.0",
+        "serve-static": "^1.14.1",
+        "typescript": "^3.5.3"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^3.0.0",
+        "@types/ejs": "^2.6.3",
+        "@types/html-minifier": "^3.5.3",
+        "@types/jsonwebtoken": "^8.3.2",
+        "@types/mongoose": "^5.5.8",
+        "@types/multer": "^1.3.7",
+        "@types/node": "^12.6.6",
+        "@types/node-xlsx": "^0.12.1",
+        "@types/nodemailer": "^6.2.0",
+        "@typescript-eslint/eslint-plugin": "^1.12.0",
+        "@typescript-eslint/parser": "^1.12.0",
+        "eslint": "^5.16.0",
+        "eslint-config-prettier": "^4.3.0",
+        "ts-node-dev": "^1.0.0-pre.39"
+    },
+    "engines": {
+        "node": "12.2.0"
+    }
+}
