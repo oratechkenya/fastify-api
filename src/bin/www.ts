@@ -81,6 +81,8 @@ export default class App {
 
         this.app.register(cookie);
 
+        this.app.register(multer.contentParser);
+
         this.app.use((req: IncomingMessage, res: ServerResponse, done: (err?: Error) => void) => {
             // remove trailing slash for all the incoming path requests before handing execution to the next
             // middleware defined in fastify execution stack

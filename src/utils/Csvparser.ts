@@ -2,17 +2,24 @@ import { readFileSync, unlinkSync } from 'fs';
 import axios from 'axios';
 
 export interface ICsvparser {
-    parse: (filepath: string) => Promise<any[]>;
+    /**
+     * Read csv file and convert to an array of objects
+     *
+     * @param {string} filePath - path to csv file
+     * @param {string[]} validator - an array of expected csv file headers for use in validation
+     */
+    parseCsv: (filepath: string, validator?: string[]) => Promise<{ message: 'success' | 'error'; data: any[] }>;
 }
 
 /**
  * Read csv file and convert to an array of objects
  *
  * @param {string} filePath - path to csv file
+ * @param {string[]} validator - an array of expected csv file headers for use in validation
  */
-export async function parse(filePath: string) {
-    // Read CSV
+export async function parseCsv(filePath: string, validator?: string[]) {
     let csvdata: string = '';
+
     if (filePath.includes('http')) {
         csvdata = await axios.get(filePath).then(res => res.data);
     } else {
@@ -25,25 +32,43 @@ export async function parse(filePath: string) {
     // Get first row for column headers
     const headers = splittedrows.shift().split(',');
 
+    if (validator) {
+        if (!Array.isArray(validator)) {
+            throw new Error('validator must be an array');
+        }
+
+        const errors = [];
+
+        validator.forEach(value => {
+            headers.findIndex(elem => elem === value) < 0 && errors.push({ expected: value });
+        });
+
+        if (errors.length) {
+            return { message: 'error', data: errors };
+        }
+    }
+
     const data = [];
+
     splittedrows.forEach((d: string) => {
         // Loop through each row
         const tmp = {};
+
         const row = d.split(',');
+
         for (let i = 0; i < headers.length; i++) {
             if (headers[i] && row[i]) {
                 tmp[headers[i].replace('\r', '').replace(' ', '')] = row[i].replace('\r', '').trim();
             }
         }
-        if (Object.keys(tmp).length) {
-            data.push(tmp);
-        }
+
+        Object.keys(tmp).length && data.push(tmp);
     });
 
     if (!filePath.includes('http')) {
-        // delete the file from local disk
+        // delete the file from local storage
         unlinkSync(filePath);
     }
 
-    return data;
+    return { message: 'success', data };
 }
