@@ -55,7 +55,14 @@ export const extractFilepath = (filename: string): string => {
         return null;
     }
 
-    const dir: string = uploadDirectories[extname(filename).split('.')[1]] ? uploadDirectories[extname(filename).split('.')[1]] : uploadDirectories['other'];
+    // return absolute urls for files uploaded to cdns
+    if (filename.includes('http')) {
+        return filename;
+    }
+
+    const rootPath = uploadDirectories[extname(filename).split('.')[1]];
+
+    const dir: string = rootPath ? rootPath : uploadDirectories['other'];
 
     return configs.apiurl + '/uploads' + dir.split('/uploads')[1] + '/' + filename;
 };
@@ -67,7 +74,9 @@ export const uploader = multer({
                 !existsSync(uploadDirectories[dir]) && mkdirSync(uploadDirectories[dir], { recursive: true });
             });
 
-            cb(null, uploadDirectories[extname(file.originalname).split('.')[1]] ? uploadDirectories[extname(file.originalname).split('.')[1]] : uploadDirectories['other']);
+            const rootPath = uploadDirectories[extname(file.originalname).split('.')[1]];
+
+            cb(null, rootPath ? rootPath : uploadDirectories['other']);
         },
         filename: (req, file, cb) => {
             cb(null, createRandomFileName(file));
