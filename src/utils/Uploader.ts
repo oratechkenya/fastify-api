@@ -67,6 +67,7 @@ export const extractFilepath = (filename: string): string => {
     return configs.apiurl + '/uploads' + dir.split('/uploads')[1] + '/' + filename;
 };
 
+// find ways to implement firebase storage, aws and others at this level
 export const uploader = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {

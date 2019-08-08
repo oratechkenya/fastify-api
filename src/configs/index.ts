@@ -3,10 +3,12 @@ import * as fp from 'fastify-plugin';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { IEmailConfigs } from '../libraries/Email';
 import { config } from 'dotenv';
+import { join } from 'path';
 
 config();
 
 export interface IConfig {
+    firebaseAccountJsonFile: string;
     apiurl: string;
     mongouri: string;
     apikey?: string;
@@ -42,6 +44,7 @@ export const configs: IConfig = {
         },
     },
     appname: process.env.APPLICATION_NAME,
+    firebaseAccountJsonFile: join(__dirname, '..', '..', 'config', 'sample-firebase-adminsdk-adgra-26b5699c31.json'),
 };
 
 export default fp((app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: {}, done: (err?: Error) => void) => {

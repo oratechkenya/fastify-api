@@ -1,8 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import Prouducts from '../controllers/Products';
-import { protectUserRoute } from '../middlewares/Authentication';
 import Users from '../controllers/Users';
+import { protectUserRoute } from '../middlewares/Authentication';
 
 export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.post(

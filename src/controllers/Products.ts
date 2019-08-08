@@ -6,7 +6,7 @@ export default class Prouducts extends Controller {
     }
 
     public async findAllEntries(): Promise<any> {
-        const users = await this.app.db.User.aggregate([
+        const users = await this.app.models.User.aggregate([
             {
                 $match: {},
             },

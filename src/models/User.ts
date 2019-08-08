@@ -1,49 +1,53 @@
 import { Document, Schema, HookNextFunction, model } from 'mongoose';
 
+export type AccountType = 'usertype1' | 'usertype2' | 'usertype3' | 'usertype4' | 'usertype5';
 export interface IUser {
-    account: 'usertype1' | 'usertype2' | 'usertype3' | 'usertype4' | 'usertype5';
+    account: AccountType;
     email: string;
     name: string;
     idnumber: number;
     phone: string;
     password: string;
-    createdat: Date;
-    updatedat: Date | number;
 }
 
 export interface IUserDocument extends IUser, Document {}
 
-const user = new Schema<IUserDocument>({
-    account: {
-        type: String,
-        enum: ['usertype1', 'usertype2', 'usertype3', 'usertype4', 'usertype5'],
-        required: true,
+const user = new Schema<IUserDocument>(
+    {
+        account: {
+            type: String,
+            enum: ['usertype1', 'usertype2', 'usertype3', 'usertype4', 'usertype5'],
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+        },
+        name: {
+            type: String,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
     },
-    email: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    createdat: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedat: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    { timestamps: { createdAt: 'createdat', updatedAt: 'updatedat' } }
+);
 
-user.pre<IUserDocument>('update', function(next: HookNextFunction) {
-    this['updatedat'] = Date.now();
+// tslint:disable-next-line: only-arrow-functions
+user.pre('aggregate', function(next: HookNextFunction) {
+    this.pipeline().unshift(
+        {
+            $project: { id: '$_id', other: '$$ROOT' },
+        },
+        {
+            $replaceRoot: { newRoot: { $mergeObjects: ['$$ROOT', '$other'] } },
+        },
+        {
+            $project: { other: 0, _id: 0 },
+        }
+    );
 
-    // do other pre-updates here
     next();
 });
 

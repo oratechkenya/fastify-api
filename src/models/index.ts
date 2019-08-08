@@ -3,17 +3,14 @@ import * as fp from 'fastify-plugin';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
-import { IProjectDocument, Product } from './Product';
 import { IUserDocument, User } from './User';
 
 export interface IDatabase {
     User: Model<IUserDocument>;
-    Product: Model<IProjectDocument>;
 }
 
 const models: IDatabase = {
     User,
-    Product,
 };
 
 export default fp(async (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: {}, done: (err?: Error) => void) => {
@@ -22,7 +19,7 @@ export default fp(async (app: FastifyInstance<Server, IncomingMessage, ServerRes
 
     await mongoose.connect(app.config.mongouri, { useNewUrlParser: true, keepAlive: true });
 
-    app.decorate('db', models);
+    app.decorate('models', models);
 
     done();
 });
