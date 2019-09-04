@@ -32,6 +32,10 @@ export async function parseCsv(filePath: string, validator?: string[]) {
     // Get first row for column headers
     const headers = splittedrows.shift().split(',');
 
+    const trimmedHeaders = [];
+
+    headers.forEach(h => trimmedHeaders.push(h.replace('\r', '').trim()));
+
     if (validator) {
         if (!Array.isArray(validator)) {
             throw new Error('validator must be an array');
@@ -40,7 +44,7 @@ export async function parseCsv(filePath: string, validator?: string[]) {
         const errors = [];
 
         validator.forEach(value => {
-            headers.findIndex(elem => elem === value) < 0 && errors.push({ expected: value });
+            trimmedHeaders.findIndex(elem => elem === value) < 0 && errors.push({ expected: value });
         });
 
         if (errors.length) {
@@ -56,9 +60,9 @@ export async function parseCsv(filePath: string, validator?: string[]) {
 
         const row = d.split(',');
 
-        for (let i = 0; i < headers.length; i++) {
-            if (headers[i] && row[i]) {
-                tmp[headers[i].replace('\r', '').replace(' ', '')] = row[i].replace('\r', '').trim();
+        for (let i = 0; i < trimmedHeaders.length; i++) {
+            if (trimmedHeaders[i] && row[i]) {
+                tmp[trimmedHeaders[i].replace(' ', '')] = row[i].replace('\r', '').trim();
             }
         }
 
