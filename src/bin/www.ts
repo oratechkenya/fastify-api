@@ -3,19 +3,22 @@ import * as fastify from 'fastify';
 import * as cookie from 'fastify-cookie';
 import * as cors from 'fastify-cors';
 import * as servefavicon from 'fastify-favicon';
+import * as multer from 'fastify-multer-op';
 import * as staticassets from 'fastify-static';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { join, resolve } from 'path';
 import * as viewengine from 'point-of-view';
+import * as servestatic from 'serve-static';
 import config from '../configs';
 import docs from '../docs';
 import database from '../models';
 import apiresources from '../routes/api-resources';
 import authentication from '../routes/authentication';
 import utilities from '../utils';
-import * as servestatic from 'serve-static';
-import * as multer from 'fastify-multer-op';
+import browser from '../libraries/Browser';
 
+const settings = require(join(__dirname, '..', '..', 'settings.json'));
+console.log(settings);
 /**
  * Application server instance.
  *
@@ -60,6 +63,14 @@ export default class App {
         process.on('uncaughtException', console.error);
 
         process.on('unhandledRejection', console.error);
+
+        // graceful shutdown for processes, and fastify's browser instance
+        for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP'] as NodeJS.Signals[]) {
+            process.on(signal, async () => {
+                this.app.browser && (await this.app.browser.close());
+                process.exit();
+            });
+        }
     }
 
     /**
@@ -78,6 +89,8 @@ export default class App {
         this.app.register(database);
 
         this.app.register(utilities);
+
+        settings.browser && this.app.register(browser);
 
         this.app.register(cookie);
 
