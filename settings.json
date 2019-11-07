@@ -1,4 +1,5 @@
 {
     "browser": true,
-    "firebase": true
+    "firebase": true,
+    "scale": false
 }

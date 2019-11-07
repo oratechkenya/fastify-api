@@ -16,6 +16,8 @@ import apiresources from '../routes/api-resources';
 import authentication from '../routes/authentication';
 import utilities from '../utils';
 import browser from '../libraries/Browser';
+import * as cluster from 'cluster';
+import * as os from 'os';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
 console.log(settings);
@@ -56,7 +58,15 @@ export default class App {
      * @memberof App
      */
     public async start() {
-        await this.app.listen(this.port as number, '0.0.0.0').catch(console.log);
+        if (settings.scale) {
+            if (cluster.isMaster) {
+                await this.workerProcesses();
+            } else {
+                await this.app.listen(this.port as number, '0.0.0.0').catch(console.log);
+            }
+        } else {
+            await this.app.listen(this.port as number, '0.0.0.0').catch(console.log);
+        }
 
         console.log('Server listening on port', this.app.server.address());
 
@@ -130,6 +140,18 @@ export default class App {
                 filename: resolve(__dirname, '..', '..', 'views'),
             },
             includeViewExtension: true,
+        });
+    }
+
+    private async workerProcesses() {
+        const cpus = os.cpus();
+
+        for (const cpu in cpus) {
+            cluster.fork();
+        }
+
+        cluster.on('exit', async worker => {
+            cluster.fork();
         });
     }
 }
