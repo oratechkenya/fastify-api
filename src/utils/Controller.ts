@@ -37,10 +37,10 @@ export default abstract class Controller {
      * Incoming request object
      *
      * @protected
-     * @type {FastifyRequest<{}>}
+     * @type {FastifyRequest}
      * @memberof Controller
      */
-    protected req: FastifyRequest<{}>;
+    protected req: FastifyRequest;
 
     /**
      * Outgoing response object
@@ -60,7 +60,7 @@ export default abstract class Controller {
      */
     protected user: { email: string; id: Types.ObjectId; account: string };
 
-    constructor(app: FastifyInstance<Server, IncomingMessage, ServerResponse>, req: FastifyRequest<{}>, res: FastifyReply<{}>) {
+    constructor(app: FastifyInstance<Server, IncomingMessage, ServerResponse>, req: FastifyRequest, res: FastifyReply<{}>) {
         this.app = app;
         this.body = req.body;
         this.req = req;

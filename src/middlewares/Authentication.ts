@@ -1,11 +1,11 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest, FastifyMiddleware } from 'fastify';
 
 /**
  * Determine account, and user type from the incoming request.
  *
  * @export
  */
-export function determineAccountAndUser(app: FastifyInstance, req: FastifyRequest<{}>) {
+export function determineAccountAndUser(app: FastifyInstance, req: FastifyRequest) {
     const auth = req.headers['authorization'] as string;
     try {
         const token = auth.split(' ')[1];
@@ -21,10 +21,10 @@ export function determineAccountAndUser(app: FastifyInstance, req: FastifyReques
  *  - Protect all resources accessible to engineers only
  *
  * @export
- * @param {FastifyRequest<{}>} req
+ * @param {FastifyRequest} req
  * @param {FastifyReply<{}>} res
  */
-export function protectUserRoute(req: FastifyRequest<{}>, res: FastifyReply<{}>, done: (err?: Error) => void) {
+export function protectUserRoute(req: FastifyRequest, res: FastifyReply<{}>, done: (err?: Error) => void): any {
     const auth = req.headers['authorization'] as string;
 
     if (!auth) {
@@ -44,12 +44,12 @@ export function protectUserRoute(req: FastifyRequest<{}>, res: FastifyReply<{}>,
  * Allow authorized user to access resource, without narrowing scope to role/account
  *
  * @export
- * @param {FastifyRequest<{}>} req
+ * @param {FastifyRequest} req
  * @param {FastifyReply<{}>} res
  * @param {(err?: Error) => void} done
  * @returns
  */
-export function protectAuthorizedUser(req: FastifyRequest<{}>, res: FastifyReply<{}>, done: (err?: Error) => void) {
+export function protectAuthorizedUser(req: FastifyRequest, res: FastifyReply<{}>, done: (err?: Error) => void): any {
     const auth = req.headers['authorization'] as string;
 
     if (!auth) {

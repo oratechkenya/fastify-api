@@ -67,24 +67,24 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
     );
 
     app.post(
-        '/create-project',
+        '/example-post-route',
         {
             preHandler: protectUserRoute,
             schema: {
                 tags: ['api'],
-                description: 'Create a new project, with all the fields marked with * as required.',
+                description: 'Create a resource, with all the fields marked with * as required.',
                 response: {
                     ...app.utils.statuscodes,
                 },
                 body: {
                     type: 'object',
                     properties: {
-                        title: { type: 'string', description: 'Project title, e.g Tatu city drainage works.' },
-                        description: { type: 'string', description: 'Project description' },
+                        title: { type: 'string', description: 'Sample entry title, e.g Resource title.' },
+                        description: { type: 'string', description: 'Resource description' },
                     },
                     required: ['title'],
                 },
-                summary: 'Create a new project',
+                summary: 'Create a new resource',
                 security: [
                     {
                         apiKey: [],
@@ -130,16 +130,16 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
     );
 
     app.delete(
-        '/delete-route',
+        '/delete-route/:id',
         {
             preHandler: protectUserRoute,
             schema: {
                 description: 'Remove an object.',
                 tags: ['api'],
-                body: {
+                params: {
                     type: 'object',
                     properties: {
-                        item: { type: 'string', description: 'item to remove' },
+                        id: { type: 'string', description: 'Id of the object being referenced' },
                     },
                 },
                 response: {

@@ -17,7 +17,7 @@ export default fp(async (app: FastifyInstance<Server, IncomingMessage, ServerRes
     mongoose.connection.on('connected', () => console.log('Mongo connected successfully'));
     mongoose.connection.on('error', console.log);
 
-    await mongoose.connect(app.config.mongouri, { useNewUrlParser: true, keepAlive: true });
+    await mongoose.connect(app.config.mongouri, { useNewUrlParser: true, keepAlive: true, useCreateIndex: true, useUnifiedTopology: true });
 
     app.decorate('models', models);
 

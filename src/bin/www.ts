@@ -20,7 +20,7 @@ import * as cluster from 'cluster';
 import * as os from 'os';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
-console.log(settings);
+
 /**
  * Application server instance.
  *
