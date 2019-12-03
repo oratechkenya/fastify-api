@@ -9,9 +9,9 @@ RUN apt update && apt upgrade -y && apt install build-essential python2.7 curl w
 # install nodejs and npm
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt install -y nodejs
 
-RUN mkdir /home/node/sams-api-server && chown -R node:node /home/node/sams-api-server
+RUN mkdir /home/node/api-server && chown -R node:node /home/node/api-server
 
-WORKDIR /home/node/sams-api-server
+WORKDIR /home/node/api-server
 
 COPY package*.json ./
 
