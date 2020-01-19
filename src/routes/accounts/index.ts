@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import Users from '../controllers/Users';
-import { protectUserRoute } from '../middlewares/Authentication';
+import Users from '../../controllers/Users';
+import { protectUserRoute } from '../../middlewares/Authentication';
 
 export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.post(
@@ -59,31 +59,6 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
     );
 
     app.post(
-        '/create-admin',
-        {
-            schema: {
-                description: 'Create admin account, as the first step, to allow other functionalities, adding users e.t.c',
-                tags: ['auth'],
-                response: {
-                    ...app.utils.statuscodes,
-                },
-                body: {
-                    type: 'object',
-                    properties: {
-                        name: { type: 'string', description: `Admin's first and last name` },
-                        idnumber: { type: 'number', description: `Admin's ID number` },
-                        email: { type: 'string', description: `Admin's email address` },
-                        password: { type: 'string', description: `Password to be used for authentication` },
-                    },
-                    required: ['name', 'email', 'password'],
-                },
-                summary: 'Create admin account',
-            },
-        },
-        async (req, res) => await new Users(app, req, res).addNewEntry()
-    );
-
-    app.post(
         '/create-user-account',
         {
             schema: {
@@ -117,3 +92,5 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
     // pass execution to the next middleware
     next();
 };
+
+exports.autoPrefix = '/auth';

@@ -1,23 +1,21 @@
+import * as cluster from 'cluster';
 import * as ejs from 'ejs';
 import * as fastify from 'fastify';
 import * as cookie from 'fastify-cookie';
 import * as cors from 'fastify-cors';
 import * as servefavicon from 'fastify-favicon';
 import * as multer from 'fastify-multer-op';
-import * as staticassets from 'fastify-static';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import * as os from 'os';
 import { join, resolve } from 'path';
 import * as viewengine from 'point-of-view';
 import * as servestatic from 'serve-static';
 import config from '../configs';
 import docs from '../docs';
 import database from '../models';
-import apiresources from '../routes/api-resources';
-import authentication from '../routes/authentication';
 import utilities from '../utils';
-import browser from '../libraries/Browser';
-import * as cluster from 'cluster';
-import * as os from 'os';
+import autoload = require('fastify-autoload');
+import * as moment from 'moment';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
 
@@ -90,6 +88,12 @@ export default class App {
      * @memberof App
      */
     private config() {
+        if (process.env.NODE_ENV !== 'production') {
+            this.app.setErrorHandler(async (err, req, res) => {
+                console.log(err);
+            });
+        }
+
         this.app.register(cors, { preflight: true, credentials: true });
 
         this.app.register(servefavicon, { path: join(__dirname, '..', '..') });
@@ -100,7 +104,7 @@ export default class App {
 
         this.app.register(utilities);
 
-        settings.browser && this.app.register(browser);
+        // this.app.register(browser);
 
         this.app.register(cookie);
 
@@ -120,18 +124,10 @@ export default class App {
 
         this.app.register(docs);
 
-        this.app.register(authentication, { prefix: '/auth' });
-
-        this.app.register(apiresources, { prefix: '/api' });
-
-        this.app.register(staticassets, {
-            root: join(__dirname, '..', '..', 'public'),
-            prefix: '/',
-            wildcard: false,
-        });
-
         // @ts-ignore
         this.app.use('/uploads', servestatic(join(__dirname, '..', '..', 'uploads')));
+        // @ts-ignore
+        this.app.use('/public', servestatic(join(__dirname, '..', '..', 'uploads')));
 
         this.app.register(viewengine, {
             engine: { ejs },
@@ -140,6 +136,16 @@ export default class App {
                 filename: resolve(__dirname, '..', '..', 'views'),
             },
             includeViewExtension: true,
+            defaultContext: {
+                moment,
+                viewsRoot: join(__dirname, '..', '..', 'views/'),
+            },
+        });
+
+        // register routes
+        this.app.register(autoload, {
+            dir: join(__dirname, '..', 'routes'),
+            includeTypeScript: true,
         });
     }
 

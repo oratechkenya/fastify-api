@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import { protectUserRoute, protectAuthorizedUser } from '../middlewares/Authentication';
-import Products from '../controllers/Products';
+import { protectUserRoute, protectAuthorizedUser } from '../../middlewares/Authentication';
+import Products from '../../controllers/Products';
 
 export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.get(
@@ -159,3 +159,5 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
     // pass to the next middleware
     next();
 };
+
+exports.autoPrefix = '/api';
