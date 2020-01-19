@@ -77,38 +77,4 @@ export default abstract class Controller {
             };
         }
     }
-
-    /**
-     * Find all entries from the referenced schema and return
-     *
-     * @returns {Promise<any>}
-     * @memberof Controller
-     */
-    public abstract async findAllEntries(): Promise<any>;
-
-    /**
-     * Add a new entry to the referenced schema
-     *
-     * @abstract
-     * @returns {Promise<any>}
-     * @memberof Controller
-     */
-    public abstract async addNewEntry(): Promise<any>;
-
-    /**
-     * Find an entry from the referenced schema, update and return update status
-     *
-     * @returns {Promise<any>}
-     * @memberof Controller
-     */
-    public abstract async findOneAndUpdate(): Promise<any>;
-
-    /**
-     * Find and return one entry from the refenced schema.
-     *
-     * @abstract
-     * @returns {Promise<any>}
-     * @memberof Controller
-     */
-    public abstract async findOneEntry(): Promise<any>;
 }

@@ -18,7 +18,7 @@ export interface ITemplate {
 
 const rootPath = join(__dirname, '..', '..', 'views', 'email-templates/');
 
-const loadTemplate = {
+const templates = {
     'account-creation': 'accounts/new-account.ejs',
     'reset-password': 'accounts/password-reset.ejs',
 };
@@ -29,13 +29,17 @@ export interface ICompileTemplate {
      *
      * @memberof ITemplate
      */
-    compileEjs: (template: ITemplatePaths, data?: any) => string;
+    compileEjs: (template: ITemplatePaths) => (data?: any) => string;
 }
 
-export const compileEjs = (template: ITemplatePaths, data?: any) => {
-    const text = readFileSync(rootPath + loadTemplate[template.template], 'utf-8');
+export const compileEjs = (template: ITemplatePaths) => {
+    const text = readFileSync(rootPath + templates[template.template], 'utf-8');
 
-    const html = ejs.compile(text)(data);
+    const fn = (data?: any) => {
+        const html = ejs.compile(text)(data);
 
-    return minify(html, { collapseWhitespace: true });
+        return minify(html, { collapseWhitespace: true });
+    };
+
+    return fn;
 };

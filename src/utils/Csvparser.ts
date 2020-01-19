@@ -1,5 +1,5 @@
-import { readFileSync, unlinkSync } from 'fs';
 import axios from 'axios';
+import { readFileSync, unlinkSync } from 'fs';
 
 export interface ICsvparser {
     /**
@@ -26,15 +26,17 @@ export async function parseCsv(filePath: string, validator?: string[]) {
         csvdata = readFileSync(filePath, { encoding: 'utf-8' });
     }
 
-    // Split on row
-    const splittedrows = csvdata.split('\n');
+    // Split into and remove empty rows
+    const rows = csvdata.split(/\r?\n/).filter(a => a);
 
-    // Get first row for column headers
-    const headers = splittedrows.shift().split(',');
+    // Get first row for column headers and remove it from list
+    const headers = rows.shift().split(',');
 
-    const trimmedHeaders = [];
+    const trimmedHeaders: string[] = [];
 
-    headers.forEach(h => trimmedHeaders.push(h.replace('\r', '').trim()));
+    for (const header of headers) {
+        trimmedHeaders.push(header.replace('\r', '').trim());
+    }
 
     if (validator) {
         if (!Array.isArray(validator)) {
@@ -43,9 +45,9 @@ export async function parseCsv(filePath: string, validator?: string[]) {
 
         const errors = [];
 
-        validator.forEach(value => {
-            trimmedHeaders.findIndex(elem => elem === value) < 0 && errors.push({ expected: value });
-        });
+        for (const validate of validator) {
+            trimmedHeaders.findIndex(header => header === validate) < 0 && errors.push({ expected: validate });
+        }
 
         if (errors.length) {
             return { message: 'error', data: errors };
@@ -54,20 +56,20 @@ export async function parseCsv(filePath: string, validator?: string[]) {
 
     const data = [];
 
-    splittedrows.forEach((d: string) => {
-        // Loop through each row
+    // Loop through each row
+    for (const row of rows) {
         const tmp = {};
 
-        const row = d.split(',');
+        const columnValues = row.split(',');
 
         for (let i = 0; i < trimmedHeaders.length; i++) {
-            if (trimmedHeaders[i] && row[i]) {
-                tmp[trimmedHeaders[i].replace(' ', '')] = row[i].replace('\r', '').trim();
+            if (trimmedHeaders[i] && columnValues[i]) {
+                tmp[trimmedHeaders[i].replace(' ', '')] = columnValues[i].replace('\r', '').trim();
             }
         }
 
         Object.keys(tmp).length && data.push(tmp);
-    });
+    }
 
     if (!filePath.includes('http')) {
         // delete the file from local storage
