@@ -4,13 +4,14 @@
     "description": "Template to quick start your API development using Fastify and TypeScript",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "ts-node-dev --respawn --no-notify src/index.ts",
-        "start": "npm run clean && npm run build && node dist/index.js",
-        "build": "npm run clean && tsc -b",
+        "dev": "ts-node-dev --respawn --no-notify --files --ignore-watch node_modules src/index.ts",
+        "dev:docker": "docker run -it --rm --name sams-api-server -p 5400:5000 -v $(pwd):/app username/docker-image npm run dev",
+        "start": "node dist/index.js",
+        "start:docker": "docker run --rm --name sams-api-server -p 5400:5000 -d username/docker-image npm start",
+        "build": "npm run clean && tsc -b --listEmittedFiles",
+        "build:docker": "docker build -t username/docker-image . && docker rmi -f $(docker images -f 'dangling=true' -q)",
         "clean": "tsc -b --clean",
         "debug": "node --inspect -r ts-node/register src/index.ts",
-        "docker-build": "npm run docker-stop && docker-compose build && docker rmi -f $(docker images --quiet --filter 'dangling=true')",
-        "docker-start": "docker-compose up",
         "docker-stop": "docker-compose down",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "npm run lint -- --fix"
@@ -34,10 +35,11 @@
         "axios": "^0.19.0",
         "bcrypt": "^3.0.6",
         "dotenv": "^8.2.0",
-        "ejs": "^2.7.1",
-        "fastify": "^2.10.0",
+        "ejs": "^3.0.1",
+        "fastify": "^2.11.0",
+        "fastify-autoload": "^1.2.0",
         "fastify-cookie": "^3.2.0",
-        "fastify-cors": "^2.1.3",
+        "fastify-cors": "^3.0.0",
         "fastify-favicon": "^2.0.0",
         "fastify-multer-op": "^1.4.6",
         "fastify-oas": "^2.5.0",
@@ -46,18 +48,17 @@
         "firebase-admin": "^8.7.0",
         "html-minifier": "^4.0.0",
         "jsonwebtoken": "^8.5.1",
+        "moment": "^2.24.0",
         "mongoose": "^5.7.8",
         "node-xlsx": "^0.15.0",
         "nodemailer": "^6.3.1",
         "pino-pretty": "^3.3.0",
         "point-of-view": "^3.7.0",
-        "puppeteer": "^2.0.0",
-        "serve-static": "^1.14.1",
-        "typescript": "^3.7.2"
+        "serve-static": "^1.14.1"
     },
     "devDependencies": {
         "@types/bcrypt": "^3.0.0",
-        "@types/ejs": "^2.6.3",
+        "@types/ejs": "^3.0.0",
         "@types/html-minifier": "^3.5.3",
         "@types/jsonwebtoken": "^8.3.5",
         "@types/mongoose": "^5.5.30",
@@ -65,14 +66,21 @@
         "@types/node": "^12.12.6",
         "@types/node-xlsx": "^0.12.1",
         "@types/nodemailer": "^6.2.2",
-        "@types/puppeteer": "^1.20.2",
-        "@typescript-eslint/eslint-plugin": "^1.13.0",
-        "@typescript-eslint/parser": "^1.13.0",
-        "eslint": "^5.16.0",
-        "eslint-config-prettier": "^4.3.0",
-        "ts-node-dev": "^1.0.0-pre.44"
+        "@types/puppeteer": "^2.0.0",
+        "@typescript-eslint/eslint-plugin": "^2.11.0",
+        "@typescript-eslint/parser": "^2.11.0",
+        "eslint": "^6.7.2",
+        "eslint-config-prettier": "^6.7.0",
+        "jest": "^24.9.0",
+        "jest-junit": "^10.0.0",
+        "ts-jest": "^24.2.0",
+        "ts-node-dev": "^1.0.0-pre.44",
+        "typescript": "^3.7.5"
+    },
+    "jest-junit": {
+        "outputDirectory": "coverage"
     },
     "engines": {
-        "node": "12.13.0"
+        "node": "12.14.1"
     }
 }
