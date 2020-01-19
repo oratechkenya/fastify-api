@@ -1,26 +1,37 @@
-FROM ubuntu:18.04
+FROM alpine:edge
 
-RUN groupadd --gid 1000 node \
-    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN addgroup -S node && adduser -S node -G node
 
 # upgrade and install build-essentials and python to later on build bcrypt and mongoose
-RUN apt update && apt upgrade -y && apt install build-essential python2.7 curl wget -y
+RUN apk update && apk upgrade --progress && apk add --virtual build-dependencies build-base python gcc
+
+# google chrome dependencies to run puppeteer
+RUN apk add chromium
 
 # install nodejs and npm
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt install -y nodejs
+RUN apk add nodejs npm
 
-RUN mkdir /home/node/api-server && chown -R node:node /home/node/api-server
+RUN mkdir /app && chown -R node:node /app
 
-WORKDIR /home/node/api-server
+WORKDIR /app
 
 COPY package*.json ./
 
 USER node
 
+# also prevent puppeteer from downloading bundled chromium as it was installed above
+ENV NODE_ENV=docker PUPPETEER_ENV=docker PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 COPY --chown=node:node . .
 
-RUN npm install && npm run build
+RUN npm install --verbose && npm run build
+
+USER root
+
+RUN rm -vrf /var/cache/apk/* && apk del build-dependencies
+
+USER node
 
 EXPOSE 5000
 
-CMD [ "npm", "start", "--silent" ]
+CMD [ "npm", "start" ]
