@@ -16,7 +16,7 @@ export interface ITemplate {
     compile: (template: ITemplatePaths, data?: any) => string;
 }
 
-const rootPath = join(__dirname, '..', '..', 'views', 'email-templates/');
+const rootPath = join(__dirname, '..', '..', 'views');
 
 const templates = {
     'account-creation': 'accounts/new-account.ejs',

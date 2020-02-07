@@ -5,22 +5,8 @@ export default class Prouducts extends Controller {
         throw new Error('Method not impelemented');
     }
 
-    public async findAllEntries(): Promise<any> {
-        const users = await this.app.models.User.aggregate([
-            {
-                $match: {},
-            },
-        ]);
-
-        return users;
-    }
-
     public async findOneAndUpdate(): Promise<any> {
         throw new Error('Method not implemented.');
-    }
-
-    public async findOneEntry() {
-        throw new Error('Method not implemented');
     }
 
     /**

@@ -1,7 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import Users from '../../controllers/Users';
-import { protectUserRoute } from '../../middlewares/Authentication';
 
 export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.post(
@@ -56,37 +55,6 @@ export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, o
             },
         },
         async (req, res) => await new Users(app, req, res).resetUserPassword()
-    );
-
-    app.post(
-        '/create-user-account',
-        {
-            schema: {
-                description: 'Create user accounts',
-                tags: ['auth'],
-                response: {
-                    ...app.utils.statuscodes,
-                },
-                body: {
-                    type: 'object',
-                    properties: {
-                        name: { type: 'string', description: `User's first and last name` },
-                        idnumber: { type: 'number', description: `User's ID number` },
-                        email: { type: 'string', description: `User's email address` },
-                        account: { type: 'string', enum: ['account1', 'account2', 'account3'], description: 'Account authentication role, accepted values are either of below' },
-                    },
-                    required: ['name', 'email', 'account'],
-                },
-                summary: 'Create user accounts',
-                security: [
-                    {
-                        apiKey: [],
-                    },
-                ],
-            },
-            preHandler: protectUserRoute,
-        },
-        async (req, res) => await new Users(app, req, res).addNewEntry()
     );
 
     // pass execution to the next middleware

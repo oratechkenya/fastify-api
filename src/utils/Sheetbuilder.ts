@@ -28,7 +28,7 @@ export function buildSheet(sheetname: string, items: any[]) {
         return '';
     }
 
-    const rows = [...Array(items.length).keys()].map(a => a + 1);
+    // const rows = [...Array(items.length).keys()].map(a => a + 1);
 
     const headers = [];
 

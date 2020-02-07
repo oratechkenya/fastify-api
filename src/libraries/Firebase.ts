@@ -2,8 +2,8 @@ import * as fp from 'fastify-plugin';
 import * as firebase from 'firebase-admin';
 import { readFileSync, unlinkSync } from 'fs';
 import { Schema } from 'mongoose';
-import { IUserDocument, User } from '../models/User';
 import { configs } from '../configs';
+import { IUserDocument, User } from '../models/User';
 
 export interface IFirebase {
     listDirectory: () => Promise<string>;
@@ -38,7 +38,7 @@ firebase.initializeApp({ credential: firebase.credential.cert(JSON.parse(cert)),
 const firebaseApp = firebase.app();
 
 async function listDirectory(basedir: string) {
-    //
+    console.log(basedir);
 }
 
 export async function pushNotification(id: Schema.Types.ObjectId, payload: any) {

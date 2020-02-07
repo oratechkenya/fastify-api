@@ -18,7 +18,7 @@ export interface ICsvparser {
  * @param {string[]} validator - an array of expected csv file headers for use in validation
  */
 export async function parseCsv(filePath: string, validator?: string[]) {
-    let csvdata: string = '';
+    let csvdata = '';
 
     if (filePath.includes('http')) {
         csvdata = await axios.get(filePath).then(res => res.data);

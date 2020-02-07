@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, FastifyMiddleware } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 /**
  * Determine account, and user type from the incoming request.
@@ -31,7 +31,7 @@ export function protectUserRoute(req: FastifyRequest, res: FastifyReply<{}>, don
         return res.status(401).send({ error: 'unauthorized', message: 'Missing authentication token' });
     }
 
-    const { account, email, id } = determineAccountAndUser(this, req);
+    const { account } = determineAccountAndUser(this, req);
 
     if (account !== 'account1') {
         return res.status(403).send({ error: 'forbidden', message: 'Invalid credentials in authentication token' });
@@ -56,7 +56,7 @@ export function protectAuthorizedUser(req: FastifyRequest, res: FastifyReply<{}>
         return res.status(401).send({ error: 'unauthorized', message: 'Missing authentication token' });
     }
 
-    const { account, email, id } = determineAccountAndUser(this, req);
+    const { account } = determineAccountAndUser(this, req);
 
     if (!account) {
         return res.status(403).send({ error: 'forbidden', message: 'Invalid credentials in authentication token' });

@@ -6,6 +6,7 @@ import * as cors from 'fastify-cors';
 import * as servefavicon from 'fastify-favicon';
 import * as multer from 'fastify-multer-op';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import * as moment from 'moment';
 import * as os from 'os';
 import { join, resolve } from 'path';
 import * as viewengine from 'point-of-view';
@@ -15,7 +16,6 @@ import docs from '../docs';
 import database from '../models';
 import utilities from '../utils';
 import autoload = require('fastify-autoload');
-import * as moment from 'moment';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
 
@@ -89,7 +89,7 @@ export default class App {
      */
     private config() {
         if (process.env.NODE_ENV !== 'production') {
-            this.app.setErrorHandler(async (err, req, res) => {
+            this.app.setErrorHandler(async (err, _req, _res) => {
                 console.log(err);
             });
         }
@@ -152,11 +152,11 @@ export default class App {
     private async workerProcesses() {
         const cpus = os.cpus();
 
-        for (const cpu in cpus) {
+        for (const _cpu in cpus) {
             cluster.fork();
         }
 
-        cluster.on('exit', async worker => {
+        cluster.on('exit', async _worker => {
             cluster.fork();
         });
     }
