@@ -21,5 +21,7 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/array-type': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/ban-ts-ignore': 'off',
     },
 };
