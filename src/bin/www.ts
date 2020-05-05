@@ -4,7 +4,7 @@ import * as fastify from 'fastify';
 import * as cookie from 'fastify-cookie';
 import * as cors from 'fastify-cors';
 import * as servefavicon from 'fastify-favicon';
-import * as multer from 'fastify-multer-op';
+import * as multer from 'fastify-multer';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as moment from 'moment';
 import * as os from 'os';
@@ -14,7 +14,8 @@ import * as servestatic from 'serve-static';
 import config from '../configs';
 import docs from '../docs';
 import database from '../models';
-import utilities from '../utils';
+import browser from '../libraries/Browser';
+import utilities from '../plugins';
 import autoload = require('fastify-autoload');
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
@@ -33,7 +34,7 @@ export default class App {
      * @type {fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>}
      * @memberof App
      */
-    private app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>;
+    public app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>;
 
     /**
      * Application port number
@@ -104,7 +105,7 @@ export default class App {
 
         this.app.register(utilities);
 
-        // this.app.register(browser);
+        this.app.register(browser);
 
         this.app.register(cookie);
 
@@ -142,9 +143,25 @@ export default class App {
             },
         });
 
+        this.app.decorateRequest('user', () => {});
+
+        this.app.addHook('preHandler', (req, res, next: (err?: Error) => void) => {
+            const auth = req.headers['authorization'] as string;
+
+            try {
+                const token = auth.split(' ')[1];
+
+                req.user = this.app.plugins.verify(token);
+            } catch {
+                //
+            }
+
+            next();
+        });
+
         // register routes
         this.app.register(autoload, {
-            dir: join(__dirname, '..', 'routes'),
+            dir: join(__dirname, '..', 'services'),
             includeTypeScript: true,
         });
     }
@@ -156,7 +173,7 @@ export default class App {
             cluster.fork();
         }
 
-        cluster.on('exit', async _worker => {
+        cluster.on('exit', async (_worker) => {
             cluster.fork();
         });
     }

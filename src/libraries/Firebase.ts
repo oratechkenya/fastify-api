@@ -3,7 +3,7 @@ import * as firebase from 'firebase-admin';
 import { readFileSync, unlinkSync } from 'fs';
 import { Schema } from 'mongoose';
 import { configs } from '../configs';
-import { IUserDocument, User } from '../models/User';
+import { Account, IAccountDocument } from '../models/Account';
 
 export interface IFirebase {
     listDirectory: () => Promise<string>;
@@ -42,7 +42,7 @@ async function listDirectory(basedir: string) {
 }
 
 export async function pushNotification(id: Schema.Types.ObjectId, payload: any) {
-    const user: IUserDocument[] = await User.aggregate([{ $match: id }]);
+    const user: IAccountDocument[] = await Account.aggregate([{ $match: id }]);
 
     if (!user.length) {
         return { error: 'user-not-found', message: 'User with id specified could not be found' };

@@ -1,20 +1,21 @@
-import * as jwt from 'jsonwebtoken';
+import * as jsonwebtoken from 'jsonwebtoken';
 import { configs } from '../configs';
+import { IAccount } from '../models/Account';
 
 /**
  * Payload expected by JWT's sign token function.
  *
  * @interface IJWTPayload
  */
-interface IJWTPayload {
+interface ItokenPayload {
     email: string;
     id: string;
-    account: 'account1' | 'account2';
+    account: IAccount['account'];
 }
 
-export interface IJWTToken {
-    sign: (options: IJWTPayload) => string;
-    verify: (token: string) => IJWTPayload;
+export interface Itoken {
+    sign: (options: ItokenPayload) => string;
+    verify: (token: string) => ItokenPayload;
 }
 
 /**
@@ -23,25 +24,25 @@ export interface IJWTToken {
  * @export
  * @class Token
  */
-export const JWTToken = {
+export const jwt = {
     /**
      * Use JWT to sign a token
      */
-    sign: (options: IJWTPayload) => {
-        const { email, id, account }: IJWTPayload = options;
+    sign: (options: ItokenPayload) => {
+        const { email, id, account }: ItokenPayload = options;
 
         if (!email || !id || !account) {
             throw new Error('Expects email, account type and id in payload.');
         }
 
-        return jwt.sign({ email, id, account }, configs.jwtsecret);
+        return jsonwebtoken.sign({ email, id, account }, configs.jwtsecret);
     },
     /**
      * Verify token, and get passed in variables
      */
     verify: (token: string) => {
         try {
-            return jwt.verify(token, configs.jwtsecret) as IJWTPayload;
+            return jsonwebtoken.verify(token, configs.jwtsecret) as ItokenPayload;
         } catch (error) {
             return { email: null, account: null, id: null };
         }

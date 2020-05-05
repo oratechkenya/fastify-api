@@ -17,7 +17,8 @@
         "noFallthroughCasesInSwitch": true,
         "moduleResolution": "node",
         "experimentalDecorators": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "typeRoots": ["./node_modules/@types", "./@types"]
     },
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "__tests__"]
 }

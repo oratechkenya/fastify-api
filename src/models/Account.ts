@@ -1,7 +1,8 @@
 import { Document, Schema, HookNextFunction, model } from 'mongoose';
 
-export type AccountType = 'usertype1' | 'usertype2' | 'usertype3' | 'usertype4' | 'usertype5';
-export interface IUser {
+export type AccountType = 'usertype1' | 'usertype2';
+
+export interface IAccount {
     account: AccountType;
     email: string;
     name: string;
@@ -10,13 +11,13 @@ export interface IUser {
     password: string;
 }
 
-export interface IUserDocument extends IUser, Document {}
+export interface IAccountDocument extends IAccount, Document {}
 
-const user = new Schema<IUserDocument>(
+const account = new Schema<IAccountDocument>(
     {
         account: {
             type: String,
-            enum: ['usertype1', 'usertype2', 'usertype3', 'usertype4', 'usertype5'],
+            enum: ['usertype1', 'usertype2'],
             required: true,
         },
         email: {
@@ -35,7 +36,7 @@ const user = new Schema<IUserDocument>(
 );
 
 // tslint:disable-next-line: only-arrow-functions
-user.pre('aggregate', function(next: HookNextFunction) {
+account.pre('aggregate', function (next: HookNextFunction) {
     this.pipeline().unshift(
         {
             $project: { id: '$_id', other: '$$ROOT' },
@@ -51,4 +52,4 @@ user.pre('aggregate', function(next: HookNextFunction) {
     next();
 });
 
-export const User = model<IUserDocument>('users', user);
+export const Account = model<IAccountDocument>('users', account);

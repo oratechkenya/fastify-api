@@ -1,4 +1,4 @@
-import Controller from '../utils/Controller';
+import Controller from '../plugins/Controller';
 
 export default class Users extends Controller {
     public async findAllEntries(): Promise<any> {
@@ -17,7 +17,9 @@ export default class Users extends Controller {
         throw new Error('Method not implemented');
     }
     public async authenticate() {
-        throw new Error('Method not impelemented');
+        // implementation here
+
+        return { token: '7yhr4n3fvgbu8jnh3i2hrf4hy7c23' };
     }
     /**
      * Reset user password, to a an auto-generated password

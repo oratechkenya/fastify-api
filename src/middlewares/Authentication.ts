@@ -10,7 +10,7 @@ export function determineAccountAndUser(app: FastifyInstance, req: FastifyReques
     try {
         const token = auth.split(' ')[1];
 
-        return app.utils.verify(token);
+        return app.plugins.verify(token);
     } catch {
         return null;
     }

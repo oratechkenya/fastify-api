@@ -1,4 +1,4 @@
-import Controller from '../utils/Controller';
+import Controller from '../plugins/Controller';
 
 export default class Prouducts extends Controller {
     public async addNewEntry(): Promise<any> {

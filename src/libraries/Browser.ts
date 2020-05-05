@@ -1,5 +1,5 @@
-import * as fp from 'fastify-plugin';
 import { FastifyInstance } from 'fastify';
+import * as fp from 'fastify-plugin';
 import * as puppeteer from 'puppeteer';
 
 export default fp(async (app: FastifyInstance, opts: {}, done: (err?: Error) => void) => {

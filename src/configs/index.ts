@@ -1,9 +1,9 @@
+import { config } from 'dotenv';
 import { FastifyInstance } from 'fastify';
 import * as fp from 'fastify-plugin';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import { IEmailConfigs } from '../libraries/Email';
-import { config } from 'dotenv';
 import { join } from 'path';
+import { IEmailConfigs } from '../plugins/Email';
 
 config();
 

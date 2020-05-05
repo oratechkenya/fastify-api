@@ -1,10 +1,18 @@
 import { randomBytes } from 'crypto';
-import * as multer from 'fastify-multer-op';
-import { File } from 'fastify-multer-op/src/interfaces';
+import multer from 'fastify-multer';
+import { File } from 'fastify-multer/src/interfaces';
 import { existsSync, mkdirSync } from 'fs';
-import { Instance } from 'multer';
+import {} from 'multer';
 import { extname, join } from 'path';
 import { configs } from '../configs';
+import { RequestHandler } from 'fastify';
+
+export interface Instance {
+    any(): RequestHandler;
+    array(name: string, num: number): RequestHandler;
+    single(name: string): RequestHandler;
+    fields(): RequestHandler;
+}
 
 export interface IUploader {
     uploader: Instance;
@@ -71,7 +79,7 @@ export const extractFilepath = (filename: string): string => {
 export const uploader = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            Object.keys(uploadDirectories).forEach(dir => {
+            Object.keys(uploadDirectories).forEach((dir) => {
                 !existsSync(uploadDirectories[dir]) && mkdirSync(uploadDirectories[dir], { recursive: true });
             });
 

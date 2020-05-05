@@ -83,10 +83,7 @@ typings/
 *.html
 
 # ignore dist folder
-<<<<<<< HEAD
+package-lock*
 dist
 
-package-lock*
-=======
-dist
->>>>>>> 6735c2e3ad31d0e0c5d94624e83cc8019d616415
+yarn.lock
