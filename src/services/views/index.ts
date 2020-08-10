@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { IncomingMessage, Server, ServerResponse } from 'http';
 
 /**
  * Instance definition for every view route defined in the application.
@@ -10,8 +9,8 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 export interface IViewRoutes {
     path: string;
     view: string;
-    middleware?: (req: FastifyRequest, res: FastifyReply<{}>, done: (err?: Error) => void) => void;
-    locals?: Array<(app: FastifyInstance, req: FastifyRequest, res: FastifyReply<{}>) => Promise<any>>;
+    middleware?: (req: FastifyRequest, res: FastifyReply, done: (err?: Error) => void) => void;
+    locals?: Array<(app: FastifyInstance, req: FastifyRequest, res: FastifyReply) => Promise<any>>;
 }
 
 const routes: IViewRoutes[] = [
@@ -29,7 +28,7 @@ const routes: IViewRoutes[] = [
     },
 ];
 
-export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: {}, next: (err?: Error) => void) => {
+export default (app: FastifyInstance, opts: {}, next: (err?: Error) => void) => {
     routes.forEach((route) => {
         app.get(
             route.path,

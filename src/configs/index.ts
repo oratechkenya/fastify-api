@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
 import { FastifyInstance } from 'fastify';
-import * as fp from 'fastify-plugin';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { join } from 'path';
 import { IEmailConfigs } from '../plugins/Email';
+const fp = require('fastify-plugin');
 
 config();
 

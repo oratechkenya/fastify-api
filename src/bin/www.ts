@@ -1,22 +1,22 @@
 import * as cluster from 'cluster';
 import * as ejs from 'ejs';
-import * as fastify from 'fastify';
-import * as cookie from 'fastify-cookie';
-import * as cors from 'fastify-cors';
-import * as servefavicon from 'fastify-favicon';
-import * as multer from 'fastify-multer';
+import fastify, { FastifyInstance } from 'fastify';
+import cookie from 'fastify-cookie';
+import cors from 'fastify-cors';
+import servefavicon from 'fastify-favicon';
+import multer from 'fastify-multer';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as moment from 'moment';
 import * as os from 'os';
 import { join, resolve } from 'path';
-import * as viewengine from 'point-of-view';
-import * as servestatic from 'serve-static';
+import viewengine from 'point-of-view';
+import servestatic from 'fastify-static';
 import config from '../configs';
 import docs from '../docs';
 import database from '../models';
 import browser from '../libraries/Browser';
 import utilities from '../plugins';
-import autoload = require('fastify-autoload');
+import autoload from 'fastify-autoload';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
 
@@ -34,7 +34,7 @@ export default class App {
      * @type {fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>}
      * @memberof App
      */
-    public app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>;
+    public app: FastifyInstance<Server, IncomingMessage, ServerResponse>;
 
     /**
      * Application port number
@@ -111,24 +111,20 @@ export default class App {
 
         this.app.register(multer.contentParser);
 
-        this.app.use((req: IncomingMessage, res: ServerResponse, done: (err?: Error) => void) => {
-            // remove trailing slash for all the incoming path requests before handing execution to the next
-            // middleware defined in fastify execution stack
-
+        this.app.addHook('onRequest', (req, res, next) => {
+            // remove trailing slash
             if (req.url.endsWith('/') && req.url !== '/') {
-                res.writeHead(301, { Location: 'http://' + req.headers['host'] + req.url.slice(0, -1) });
-                res.end();
+                res.raw.writeHead(301, { Location: 'http://' + req.headers['host'] + req.url.slice(0, -1) });
+                res.raw.end();
             }
 
-            done();
+            next();
         });
 
         this.app.register(docs);
 
-        // @ts-ignore
-        this.app.use('/uploads', servestatic(join(__dirname, '..', '..', 'uploads')));
-        // @ts-ignore
-        this.app.use('/public', servestatic(join(__dirname, '..', '..', 'uploads')));
+        this.app.register(servestatic, { root: join(__dirname, '..', '..', 'uploads'), wildcard: false, prefix: '/uploads' });
+        this.app.register(servestatic, { root: join(__dirname, '..', '..', 'public'), wildcard: false, prefix: '/public' });
 
         this.app.register(viewengine, {
             engine: { ejs },
@@ -162,7 +158,7 @@ export default class App {
         // register routes
         this.app.register(autoload, {
             dir: join(__dirname, '..', 'services'),
-            includeTypeScript: true,
+            // includeTypeScript: true,
         });
     }
 

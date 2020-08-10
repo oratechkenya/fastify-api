@@ -18,7 +18,7 @@ import { FastifyReply, FastifyRequest, FastifyInstance } from 'fastify';
 
 export interface IResolveLocals {
     // tslint:disable-next-line: ban-types
-    resolve: (locals: Function | Function[], app: FastifyInstance, req: FastifyRequest<{}>, res: FastifyReply<{}>) => Promise<object>;
+    resolve: (locals: Function | Function[], app: FastifyInstance, req: FastifyRequest, res: FastifyReply) => Promise<object>;
 }
 
 /**
@@ -31,8 +31,8 @@ export interface IResolveLocals {
  * @param res - outgoing message object
  */
 // tslint:disable-next-line:ban-types
-export async function resolve(locals: Function | Function[], app: FastifyInstance, req: FastifyRequest<{}>, res: FastifyReply<{}>): Promise<object> {
-    const result: Array<{}> = [];
+export async function resolve(locals: Function | Function[], app: FastifyInstance, req: FastifyRequest, res: FastifyReply): Promise<object> {
+    const result: Array<any> = [];
 
     if (!locals) {
         return [];
@@ -53,7 +53,7 @@ export async function resolve(locals: Function | Function[], app: FastifyInstanc
     for await (const obj of result) {
         // some functions may not return an object,
         // handle non-object return types
-        typeof obj === 'object' && Object.keys(obj).forEach(key => (data[key] = obj[key]));
+        typeof obj === 'object' && Object.keys(obj).forEach((key) => (data[key] = obj[key]));
     }
 
     return data;

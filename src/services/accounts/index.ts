@@ -1,8 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { IncomingMessage, Server, ServerResponse } from 'http';
 import Users from '../../controllers/Users';
 
-export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
+export default (app: FastifyInstance, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.post(
         '/sign-in',
         {

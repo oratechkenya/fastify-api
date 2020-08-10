@@ -16,7 +16,7 @@ export function compareObjects(expected: {}, supplied: {}) {
     const [required, incoming, error] = [Object.keys(expected), Object.keys(supplied), []];
 
     for (const value of required) {
-        const index = incoming.findIndex(a => a === value);
+        const index = incoming.findIndex((a) => a === value);
 
         if (index < 0) {
             error.push(value);

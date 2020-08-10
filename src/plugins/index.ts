@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import * as fp from 'fastify-plugin';
 import { ICsvparser, parseCsv } from './Csvparser';
 import { IEmail, sendEmail } from './Email';
 import { compareObjects, IObjectdiff } from './Objectdiff';
@@ -10,6 +9,7 @@ import { IStatusCodesInterface, statuscodes } from './Statuscodes';
 import { compileEjs, ICompileTemplate } from './Template';
 import { Itoken, jwt } from './Token';
 import { extractFilepath, IUploader, uploader } from './Uploader';
+const fp = require('fastify-plugin');
 
 // tslint:disable-next-line: no-empty-interface
 export interface IPlugins extends IObjectdiff, IUploader, IStatusCodesInterface, ICompileTemplate, Itoken, IEmail, ICsvparser, IResolveLocals, IPaginate, ISheetbuilder {}

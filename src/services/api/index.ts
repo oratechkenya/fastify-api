@@ -1,9 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import { IncomingMessage, Server, ServerResponse } from 'http';
-import { protectUserRoute, protectAuthorizedUser } from '../../middlewares/Authentication';
 import Products from '../../controllers/Products';
+import { protectAuthorizedUser, protectUserRoute } from '../../middlewares/Authentication';
 
-export default (app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: { prefix: string }, next: (err?: Error) => void) => {
+export default (app: FastifyInstance, opts: { prefix: string }, next: (err?: Error) => void) => {
     app.get(
         '/get-route',
         {

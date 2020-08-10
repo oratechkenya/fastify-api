@@ -1,17 +1,16 @@
 import { randomBytes } from 'crypto';
+import { RouteHandler } from 'fastify';
 import multer from 'fastify-multer';
 import { File } from 'fastify-multer/src/interfaces';
 import { existsSync, mkdirSync } from 'fs';
-import {} from 'multer';
 import { extname, join } from 'path';
 import { configs } from '../configs';
-import { RequestHandler } from 'fastify';
 
 export interface Instance {
-    any(): RequestHandler;
-    array(name: string, num: number): RequestHandler;
-    single(name: string): RequestHandler;
-    fields(): RequestHandler;
+    any(): RouteHandler;
+    array(name: string, num: number): RouteHandler;
+    single(name: string): RouteHandler;
+    fields(): RouteHandler;
 }
 
 export interface IUploader {

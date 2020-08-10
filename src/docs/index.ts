@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import * as fp from 'fastify-plugin';
 import { PluginOptions } from 'fastify-plugin';
-import * as swagger from 'fastify-oas';
+import swagger from 'fastify-swagger';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+const fp = require('fastify-plugin');
 
 export default fp((app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: PluginOptions, done: (err?: Error) => void) => {
     app.register(swagger, {
@@ -38,21 +38,7 @@ export default fp((app: FastifyInstance<Server, IncomingMessage, ServerResponse>
                     in: 'header',
                 },
             },
-            servers: [
-                {
-                    url: 'http://127.0.0.1:5000/',
-                    description: 'Local server, e.g. Main (development) server',
-                },
-                {
-                    url: 'http://api.example.com/v1',
-                    description: 'Optional server description, e.g. Main (production) server',
-                },
-            ],
         },
-        exposeRoute: true,
-        yaml: true,
-        addModels: true,
-        openapi: '3.0.0',
     });
 
     done();

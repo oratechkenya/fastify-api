@@ -22,9 +22,9 @@ export function determineAccountAndUser(app: FastifyInstance, req: FastifyReques
  *
  * @export
  * @param {FastifyRequest} req
- * @param {FastifyReply<{}>} res
+ * @param {FastifyReply} res
  */
-export function protectUserRoute(req: FastifyRequest, res: FastifyReply<{}>, done: (err?: Error) => void): any {
+export function protectUserRoute(req: FastifyRequest, res: FastifyReply, done: (err?: Error) => void): any {
     const auth = req.headers['authorization'] as string;
 
     if (!auth) {
@@ -33,7 +33,7 @@ export function protectUserRoute(req: FastifyRequest, res: FastifyReply<{}>, don
 
     const { account } = determineAccountAndUser(this, req);
 
-    if (account !== 'account1') {
+    if (account !== 'usertype1') {
         return res.status(403).send({ error: 'forbidden', message: 'Invalid credentials in authentication token' });
     }
 
@@ -45,11 +45,11 @@ export function protectUserRoute(req: FastifyRequest, res: FastifyReply<{}>, don
  *
  * @export
  * @param {FastifyRequest} req
- * @param {FastifyReply<{}>} res
+ * @param {FastifyReply} res
  * @param {(err?: Error) => void} done
  * @returns
  */
-export function protectAuthorizedUser(req: FastifyRequest, res: FastifyReply<{}>, done: (err?: Error) => void): any {
+export function protectAuthorizedUser(req: FastifyRequest, res: FastifyReply, done: (err?: Error) => void): any {
     const auth = req.headers['authorization'] as string;
 
     if (!auth) {
