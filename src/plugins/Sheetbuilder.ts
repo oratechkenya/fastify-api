@@ -1,5 +1,5 @@
+import { mkdirSync, writeFileSync } from 'fs';
 import xlsx from 'node-xlsx';
-import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 export interface ISheetbuilder {
@@ -53,7 +53,7 @@ export function buildSheet(sheetname: string, items: any[]) {
 
     const options = { '!cols': columnsWidth, '!rows': rowsWidth };
 
-    const buffer = xlsx.build([{ name: sheetname, data }], options);
+    const buffer: any = xlsx.build([{ name: sheetname, data }], options);
 
     mkdirSync(join(__dirname, '..', '..', `files6729gs`), { recursive: true });
 

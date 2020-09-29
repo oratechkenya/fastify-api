@@ -30,7 +30,7 @@ export async function parseCsv(filePath: string, validator?: string[]) {
     const rows = csvdata.split(/\r?\n/).filter((a) => a);
 
     // Get first row for column headers and remove it from list
-    const headers = rows.shift().split(',');
+    const headers = rows.shift().split(',').filter(Boolean);
 
     const trimmedHeaders: string[] = [];
 
