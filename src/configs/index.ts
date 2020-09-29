@@ -3,7 +3,7 @@ import { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { join } from 'path';
 import { IEmailConfigs } from '../plugins/Email';
-const fp = require('fastify-plugin');
+import fp from 'fastify-plugin';
 
 config();
 

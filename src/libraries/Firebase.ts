@@ -1,4 +1,4 @@
-import * as fp from 'fastify-plugin';
+import fp from 'fastify-plugin';
 import * as firebase from 'firebase-admin';
 import { readFileSync, unlinkSync } from 'fs';
 import { Schema } from 'mongoose';

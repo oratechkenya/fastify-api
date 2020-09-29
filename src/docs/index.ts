@@ -1,8 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { PluginOptions } from 'fastify-plugin';
+import fp, { PluginOptions } from 'fastify-plugin';
 import swagger from 'fastify-swagger';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-const fp = require('fastify-plugin');
 
 export default fp((app: FastifyInstance<Server, IncomingMessage, ServerResponse>, opts: PluginOptions, done: (err?: Error) => void) => {
     app.register(swagger, {

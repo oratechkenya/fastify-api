@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { Account, IAccountDocument } from './Account';
-const fp = require('fastify-plugin');
 
 export interface IDatabase {
     Account: Model<IAccountDocument>;

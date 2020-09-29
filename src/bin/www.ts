@@ -5,18 +5,18 @@ import cookie from 'fastify-cookie';
 import cors from 'fastify-cors';
 import servefavicon from 'fastify-favicon';
 import multer from 'fastify-multer';
+import servestatic from 'fastify-static';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as moment from 'moment';
 import * as os from 'os';
 import { join, resolve } from 'path';
 import viewengine from 'point-of-view';
-import servestatic from 'fastify-static';
 import config from '../configs';
 import docs from '../docs';
-import database from '../models';
 import browser from '../libraries/Browser';
+import database from '../models';
 import utilities from '../plugins';
-import autoload from 'fastify-autoload';
+import autoload from '../plugins/Autoload';
 
 const settings = require(join(__dirname, '..', '..', 'settings.json'));
 

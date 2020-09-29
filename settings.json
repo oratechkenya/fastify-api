@@ -1,5 +1,5 @@
 {
-    "browser": true,
+    "browser": false,
     "firebase": true,
     "scale": false
 }
