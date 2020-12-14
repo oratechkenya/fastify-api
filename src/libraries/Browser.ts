@@ -8,6 +8,7 @@ export default fp(async (app: FastifyInstance, opts: {}, done: (err?: Error) => 
     /**
      *
      * Dependencies for chromium on live server/linux based host.
+     * Refer https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#chrome-headless-doesnt-launch-on-unix
      *
      * sudo apt-get install libx11-xcb1 libxcomposite1 libxi6 libxext6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 \
      * libasound2 libpangocairo-1.0-0 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
